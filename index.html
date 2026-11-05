@@ -233,7 +233,9 @@ function calc(){const m=S.calc,o=parseFloat($('#c-o').value),b=parseFloat($('#c-
  $('#r-v').textContent=ev>=.05&&el>0?'Pasa el cálculo. Falta una razón concreta y comprobar el once.':ev>0?'Valor no robusto: el importe es 0 si el VE prudente es negativo.':'Sin valor a esta cuota.'}
 function renderStatus(){const d=$('#dot'),t=$('#stxt'),live=S.events.some(e=>e.status.type.state==='in'),al=$('#alert');d.className='dot '+(S.ok===false?'err':live?'live':'ok');t.textContent=S.last?S.last.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):'Conectando';al.hidden=S.ok!==false;if(S.ok===false)al.textContent=`Sin conexión con los datos en directo.${S.last?' Última lectura a las '+S.last.toLocaleTimeString('es-ES')+'.':' Abre el archivo en Chrome, Edge o Firefox, fuera de la vista previa.'} Reintentando.`}
 const renderAll=()=>{renderNav();$('#main').dataset.view=S.view;renderList();renderDetail();renderSlip();renderStatus()};
-function go(v){if(!VIEWS.some(x=>x[0]===v))v='reco';S.view=v;try{localStorage.setItem('view',v)}catch(e){}if(location.hash.slice(1)!==v)history.replaceState(null,'','#'+v);renderAll();scrollTo(0,0)}
+let gcLast='';function track(v){const g=window.goatcounter;if(v===gcLast||!g||!g.count)return;gcLast=v;try{g.count({path:'/PIZARRA/'+v,title:v})}catch(e){}}
+window.gcInit=()=>track(S.view);
+function go(v){if(!VIEWS.some(x=>x[0]===v))v='reco';S.view=v;try{localStorage.setItem('view',v)}catch(e){}if(location.hash.slice(1)!==v)history.replaceState(null,'','#'+v);renderAll();scrollTo(0,0);track(v)}
 function toast(t,act){const b=$('#toast');b.innerHTML=`<span>${esc(t)}</span>${act?'<button type="button" id="t-o">Ver boleto</button>':''}`;b.hidden=false;const o=$('#t-o');if(o)o.onclick=()=>openSlip(true);clearTimeout(S.tt);S.tt=setTimeout(()=>b.hidden=true,4500)}
 function openSlip(v){const a=$('#slip'),c=$('#scrim');a.hidden=!v;c.hidden=!v;document.body.classList.toggle('noscroll',v);if(v){renderSlip();$('#toast').hidden=true;$('#slip-x').focus()}else $('#slip-b').focus()}
 
@@ -484,4 +486,4 @@ function init(){const n=new Date(),z=x=>String(x).padStart(2,'0');$('#dt').value
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)tick()});tick()}
 if(typeof document!=='undefined')init();
 if(typeof module!=='undefined')module.exports={pois,grid,x12,solveT,split,nbOver,devig,am2d,prob};
-</script></body></html>
+</script><script data-goatcounter="https://pizarra-colino.goatcounter.com/count" data-goatcounter-settings='{"no_onload":true}' async src="https://gc.zgo.at/count.js" onload="window.gcInit&&gcInit()"></script></body></html>
